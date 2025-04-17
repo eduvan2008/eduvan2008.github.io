@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>EVITA LAS ADICCIONES</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; padding: 20px; }
+    .nivel { border: 2px solid #ccc; border-radius: 12px; padding: 20px; margin: 20px 0; background: #fff; }
+    h2 { color: #444; }
+    .btn { padding: 10px 20px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+    .verde { background: #4caf50; color: white; }
+    .amarillo { background: #ffc107; color: black; }
+    .rojo { background: #f44336; color: white; }
+    .mensaje { margin: 15px 0; font-size: 18px; }
+    textarea { width: 95%; margin: 5px 0; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+    #respuestasGuardadas { margin-top: 30px; }
+  </style>
+</head>
+<body>
+
+  <h1>Elige tu camino, solo tu puedes hacer la diferencia</h1>
+
+  <div id="nivelesContainer"></div>
+
+  <div id="respuestasGuardadas" style="display:none;">
+    <h2>📖 Respuestas Guardadas</h2>
+    <div id="listaRespuestas"></div>
+  </div>
+
+  <script>
+    const niveles = [
+      {
+        titulo: "Nivel 1",
+        opciones: [
+          { color: 'verde', texto: "Decides hacer ejercicio para sentirte mejor." },
+          { color: 'amarillo', texto: "Aceptas una bebida alcohólica aunque no tienes ganas." },
+          { color: 'rojo', texto: "Consumes una sustancia sin conocer sus efectos." }
+        ]
+      },
+      {
+        titulo: "Nivel 2",
+        opciones: [
+          { color: 'verde', texto: "Hablas con un adulto de confianza sobre tus problemas." },
+          { color: 'amarillo', texto: "Ignoras los consejos de tus amigos." },
+          { color: 'rojo', texto: "Empiezas a fumar a escondidas." }
+        ]
+      },
+      {
+        titulo: "Nivel 3",
+        opciones: [
+          { color: 'verde', texto: "Te unes a un grupo de apoyo y haces nuevos amigos saludables." },
+          { color: 'amarillo', texto: "Dejas de ir a clases porque no te sientes bien." },
+          { color: 'rojo', texto: "Te sientes solo y decides consumir para encajar." }
+        ]
+      },
+      {
+        titulo: "Nivel 4",
+        opciones: [
+          { color: 'verde', texto: "Te concentras en tus estudios y decides estudiar para tu futuro." },
+          { color: 'amarillo', texto: "Decides probar nuevas sustancias para experimentar." },
+          { color: 'rojo', texto: "Dejas de estudiar y te desconectas de tus amigos." }
+        ]
+      },
+      {
+        titulo: "Nivel 5",
+        opciones: [
+          { color: 'verde', texto: "Ayudas a otros a tomar decisiones saludables." },
+          { color: 'amarillo', texto: "Tu grupo de amigos te empieza a presionar para consumir." },
+          { color: 'rojo', texto: "Consumes en exceso y no te das cuenta de los efectos." }
+        ]
+      },
+      {
+        titulo: "Nivel 6",
+        opciones: [
+          { color: 'verde', texto: "Te conviertes en un líder en tu comunidad y promueves la prevención." },
+          { color: 'amarillo', texto: "Sientes que el consumo te ayuda a calmarte, pero sabes que no es la solución." },
+          { color: 'rojo', texto: "Pierdes el control y dejas de cuidar tu salud." }
+        ]
+      },
+      {
+        titulo: "Nivel 7",
+        opciones: [
+          { color: 'verde', texto: "Eliges salir a caminar o escuchar música en lugar de consumir sustancias." },
+          { color: 'amarillo', texto: "Ocultas a tu familia que probaste una sustancia." },
+          { color: 'rojo', texto: "Manejas o conduces bajo efectos de sustancias." }
+        ]
+      },
+      {
+        titulo: "Nivel 8",
+        opciones: [
+          { color: 'verde', texto: "Compartes en redes sociales mensajes sobre vida saludable." },
+          { color: 'amarillo', texto: "Ves a alguien consumir y no dices nada." },
+          { color: 'rojo', texto: "Te unes a grupos que incitan al consumo o vandalismo." }
+        ]
+      },
+      {
+        titulo: "Nivel 9",
+        opciones: [
+          { color: 'verde', texto: "Apoyas a un amigo para que deje de consumir." },
+          { color: 'amarillo', texto: "Consumes alcohol para calmarte cuando estás triste." },
+          { color: 'rojo', texto: "Abandonas tus estudios por culpa de las adicciones." }
+        ]
+      },
+      {
+        titulo: "Nivel 10",
+        opciones: [
+          { color: 'verde', texto: "Te unes a un grupo de jóvenes que promueven la prevención." },
+          { color: 'amarillo', texto: "Gastas dinero en apuestas en línea por curiosidad." },
+          { color: 'rojo', texto: "Agredes a alguien estando bajo los efectos de una droga." }
+        ]
+      }
+    ];
+
+    // Función para crear los niveles dinámicamente
+    function crearNiveles() {
+      const container = document.getElementById('nivelesContainer');
+      niveles.forEach((nivel, index) => {
+        const div = document.createElement('div');
+        div.className = 'nivel';
+        div.innerHTML = `<h2>${nivel.titulo}</h2>` +
+          nivel.opciones.map(opt => 
+            `<button class="btn ${opt.color}" onclick="mostrarMensaje('${opt.color}', ${index})">${opt.texto}</button>`
+          ).join('') +
+          `<div id="resultado${index}" class="mensaje"></div>
+           <div id="preguntas${index}" style="display:none;">
+             <h3>Reflexiona:</h3>
+             <textarea id="motivo${index}" placeholder="¿Por qué elegiste ese camino?" rows="3"></textarea><br>
+             <textarea id="sentimiento${index}" placeholder="¿Qué sentimientos tienes al leer estos mensajes?" rows="3"></textarea><br>
+             <textarea id="sentimiento${index}" placeholder="¿Como creen que estas decisiones afectaran tu futuro?" rows="3"></textarea><br>
+             <button class="btn verde" onclick="enviarRespuesta(${index})">Enviar Respuestas ✅</button>
+           </div>`;
+        container.appendChild(div);
+      });
+    }
+
+    function mostrarMensaje(color, nivel) {
+      const mensajes = {
+        verde: "✅ Eres un ejemplo que inspira a los jóvenes.<br>",
+        amarillo: "😕 Te sientes confundido, pero todavía puedes cambiar.<br>🤔 Tus amigos te presionan, ¿qué decides?",
+        rojo: "❌ Has perdido el control.<br>❌ Tu salud está en peligro."
+      };
+      document.getElementById(`resultado${nivel}`).innerHTML = mensajes[color];
+      document.getElementById(`preguntas${nivel}`).style.display = 'block';
+    }
+
+    function enviarRespuesta(nivel) {
+      const motivo = document.getElementById(`motivo${nivel}`).value;
+      const sentimiento = document.getElementById(`sentimiento${nivel}`).value;
+
+      if (motivo && sentimiento) {
+        const nuevaRespuesta = {
+          motivo: motivo,
+          sentimiento: sentimiento,
+          nivel: nivel + 1,
+          fecha: new Date().toLocaleString()
+        };
+        let respuestas = JSON.parse(localStorage.getItem('respuestas')) || [];
+        respuestas.push(nuevaRespuesta);
+        localStorage.setItem('respuestas', JSON.stringify(respuestas));
+
+        alert("✅ Gracias por compartir tus respuestas. ¡Cada decisión cuenta! 💚");
+        document.getElementById(`resultado${nivel}`).innerHTML = '';
+        document.getElementById(`preguntas${nivel}`).style.display = 'none';
+        document.getElementById(`motivo${nivel}`).value = '';
+        document.getElementById(`sentimiento${nivel}`).value = '';
+        mostrarRespuestas();
+      } else {
+        alert("Por favor responde ambas preguntas.");
+      }
+    }
+
+    function mostrarRespuestas() {
+      const respuestas = JSON.parse(localStorage.getItem('respuestas')) || [];
+      const contenedor = document.getElementById('listaRespuestas');
+      const bloque = document.getElementById('respuestasGuardadas');
+
+      if (respuestas.length > 0) {
+        contenedor.innerHTML = '';
+        respuestas.forEach(r => {
+          contenedor.innerHTML += `<p><strong>🗓️ ${r.fecha}</strong> — <strong>Nivel ${r.nivel}</strong><br>
+            📌 <em>Motivo:</em> ${r.motivo}<br>
+            📌 <em>Sentimiento:</em> ${r.sentimiento}</p><hr>`;
+        });
+        bloque.style.display = 'block';
+      }
+    }
+
+    window.onload = () => {
+      crearNiveles();
+      mostrarRespuestas();
+    };
+  </script>
+</body>
+</html>
